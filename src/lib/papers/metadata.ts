@@ -50,6 +50,10 @@ export function normalizeBranch(branch: string | undefined): string | undefined 
   const b = branch.toLowerCase().trim();
   if (!b) return undefined;
 
+  // Abbreviated folder names, e.g. "E & C", "E and E", "EC".
+  if (/^e\s*(&|and)?\s*c$/.test(b)) return 'ECE';
+  if (/^e\s*(&|and)?\s*e$/.test(b)) return 'EEE';
+
   if (b.includes('electrical') && b.includes('electronic')) return 'EEE';
   if (b.includes('electronic') && b.includes('communication')) return 'ECE';
   if (b.includes('computer') && b.includes('science')) return 'CSE';
@@ -70,6 +74,9 @@ export function normalizeBranch(branch: string | undefined): string | undefined 
   const withoutSuffix = b.replace(/ engg| engineering/g, '');
   const known = KNOWN_BRANCHES.find((k) => k.toLowerCase() === withoutSuffix);
   if (known) return known;
+
+  // Short single-word names are acronyms (CCE, IT, VLSI, AIML), not words to title-case.
+  if (/^[a-z]{2,4}$/.test(b)) return b.toUpperCase();
 
   return branch
     .trim()

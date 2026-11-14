@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 import { Inter } from 'next/font/google';
 import type { ReactNode } from 'react';
+import { themeInitScript } from '@/lib/theme';
 import { cn } from '@/lib/utils';
 import './globals.css';
 
@@ -25,19 +26,27 @@ export const metadata: Metadata = {
   title: { default: title, template: `%s · ${title}` },
   description,
   applicationName: title,
+  icons: { icon: '/favicon.ico' },
   keywords: ['MIT Manipal', 'question papers', 'previous year papers', 'MAHE', 'exam archive'],
   openGraph: { type: 'website', title, description, siteName: title },
-  twitter: { card: 'summary', title, description },
+  twitter: { card: 'summary_large_image', title, description },
 };
 
 export const viewport: Viewport = {
-  themeColor: '#0f1729',
-  colorScheme: 'dark',
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#f8fafc' },
+    { media: '(prefers-color-scheme: dark)', color: '#0c1220' },
+  ],
+  colorScheme: 'light dark',
 };
 
 export default function RootLayout({ children }: Readonly<{ children: ReactNode }>) {
   return (
-    <html lang="en" className="dark">
+    // The theme script sets the `dark` class before hydration, so React must not complain about it.
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+      </head>
       <body className={cn('min-h-screen bg-background font-sans antialiased', inter.variable)}>
         <a
           href="#main"

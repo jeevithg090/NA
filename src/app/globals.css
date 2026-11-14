@@ -2,53 +2,57 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Minimal Dark Theme */
+/*
+ * Design tokens (HSL channels, consumed by tailwind.config.ts).
+ * Text tokens meet WCAG AA (≥ 4.5:1) against --background and --card in both themes;
+ * --input meets the 3:1 non-text contrast guideline for form-control borders.
+ */
 @layer base {
   :root {
-    /* Light theme (fallback, but dark is default) */
-    --background: 0 0% 100%; /* White */
-    --foreground: 224 71.4% 4.1%; /* Almost Black */
+    color-scheme: light;
+    --background: 210 40% 98%;
+    --foreground: 222 47% 11%;
     --card: 0 0% 100%;
-    --card-foreground: 224 71.4% 4.1%;
+    --card-foreground: 222 47% 11%;
     --popover: 0 0% 100%;
-    --popover-foreground: 224 71.4% 4.1%;
-    --primary: 217 91% 60%; /* Muted Blue Primary */
-    --primary-foreground: 210 20% 98%; /* Almost White */
-    --secondary: 220 14.3% 95.9%; /* Light Gray Secondary */
-    --secondary-foreground: 220.9 39.3% 11%;
-    --muted: 220 14.3% 95.9%;
-    --muted-foreground: 220 8.9% 46.1%;
-    --accent: 220 14.3% 95.9%;
-    --accent-foreground: 220.9 39.3% 11%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 20% 98%;
-    --border: 220 13% 91%; /* Lighter Gray Border */
-    --input: 220 13% 91%;
-    --ring: 217 91% 60%; /* Muted Blue Ring */
-    --radius: 0.5rem; /* Slightly increased radius */
+    --popover-foreground: 222 47% 11%;
+    --primary: 192 91% 28%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 214 32% 93%;
+    --secondary-foreground: 222 47% 18%;
+    --muted: 214 32% 93%;
+    --muted-foreground: 215 19% 37%;
+    --accent: 214 32% 91%;
+    --accent-foreground: 222 47% 11%;
+    --destructive: 0 72% 42%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 214 25% 86%;
+    --input: 215 16% 58%;
+    --ring: 192 91% 32%;
+    --radius: 0.5rem;
   }
 
   .dark {
-    --background: 222 47.4% 11.2%; /* Dark Blueish Gray */
-    --foreground: 210 40% 98%; /* Light Grayish Blue */
-    --card: 222 47.4% 14.2%; /* Slightly Lighter Card */
+    color-scheme: dark;
+    --background: 222 47% 9%;
+    --foreground: 210 40% 98%;
+    --card: 222 44% 12%;
     --card-foreground: 210 40% 98%;
-    --popover: 222 47.4% 11.2%;
+    --popover: 222 44% 12%;
     --popover-foreground: 210 40% 98%;
-    --primary: 180 82.8% 70.8%; /* Cyan */
-    --primary-foreground: 222 47.4% 11.2%; /* Primary Text */
-    --secondary: 217.2 32.6% 17.5%; /* Darker Gray */
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%; /* Lighter Muted Foreground */
-    --accent: 180 82.8% 70.8%; /* Cyan accent */
-    --accent-foreground: 222 47.4% 11.2%; /* Accent Text */
-    --destructive: 0 62.8% 50.6%; /* Muted Destructive Red */
-    --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%; /* Darker Gray Border */
-    --input: 217.2 32.6% 17.5%; /* Input matches border */
-    --ring: 180 82.8% 70.8%; /* Cyan ring */
-    --radius: 0.5rem; /* Slightly increased radius */
+    --primary: 182 78% 66%;
+    --primary-foreground: 222 47% 9%;
+    --secondary: 217 33% 18%;
+    --secondary-foreground: 210 40% 94%;
+    --muted: 217 33% 18%;
+    --muted-foreground: 215 20% 70%;
+    --accent: 217 33% 20%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 72% 62%;
+    --destructive-foreground: 222 47% 9%;
+    --border: 217 30% 21%;
+    --input: 215 18% 42%;
+    --ring: 182 78% 66%;
   }
 }
 
@@ -56,17 +60,22 @@
   * {
     @apply border-border;
   }
+  html {
+    -webkit-tap-highlight-color: transparent;
+  }
   body {
-    /* Remove gradient for a solid minimal background */
     @apply bg-background text-foreground;
     min-height: 100vh;
+    font-feature-settings: 'cv11', 'ss01';
   }
-}
-
-/* Improve focus rings for accessibility */
-*:focus-visible {
-  outline: 2px solid hsl(var(--ring));
-  outline-offset: 1px; /* Closer offset */
+  :focus-visible {
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: 2px;
+  }
+  /* Hide the native clear button; the search field has its own. */
+  input[type='search']::-webkit-search-cancel-button {
+    -webkit-appearance: none;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -74,6 +83,8 @@
   *::before,
   *::after {
     animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }

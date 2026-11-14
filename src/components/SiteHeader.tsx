@@ -1,31 +1,62 @@
-import { Github } from 'lucide-react';
+import { Github, Library } from 'lucide-react';
+import Link from 'next/link';
+import { ThemeToggle } from '@/components/ThemeToggle';
+import { Button } from '@/components/ui/button';
 
 const REPO_URL = 'https://github.com/NilayShenai/Papers-Please';
 
 export function SiteHeader() {
   return (
-    <header className="relative mb-8 text-center">
-      <a
-        href={REPO_URL}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="absolute right-0 top-0 rounded-md p-1 text-muted-foreground transition-colors hover:text-foreground"
-        aria-label="Source code on GitHub (opens in a new tab)"
-        title="Source code on GitHub"
-      >
-        <Github className="h-5 w-5 md:h-6 md:w-6" aria-hidden="true" />
-      </a>
-      <h1 className="mb-2 text-3xl font-bold text-foreground md:text-4xl">Papers, Please</h1>
-      <p className="text-muted-foreground">MIT Manipal Library: Revamped</p>
+    <header className="mb-10 md:mb-12">
+      <div className="mb-10 flex items-center justify-between gap-4 md:mb-14">
+        <Link
+          href="/"
+          className="flex items-center gap-2 rounded-md text-sm font-semibold tracking-tight"
+        >
+          <span className="flex h-8 w-8 items-center justify-center rounded-md bg-primary text-primary-foreground">
+            <Library className="h-4 w-4" aria-hidden="true" />
+          </span>
+          Papers, Please
+        </Link>
+        <nav aria-label="Site" className="flex items-center gap-1">
+          <ThemeToggle />
+          <Button
+            asChild
+            variant="ghost"
+            size="icon"
+            className="text-muted-foreground hover:text-foreground"
+          >
+            <a
+              href={REPO_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Source code on GitHub (opens in a new tab)"
+              title="Source code on GitHub"
+            >
+              <Github aria-hidden="true" />
+            </a>
+          </Button>
+        </nav>
+      </div>
+
+      <div className="mx-auto max-w-2xl text-center">
+        <h1 className="text-balance text-3xl font-bold tracking-tight text-foreground sm:text-4xl md:text-5xl">
+          Find MIT Manipal question papers, fast
+        </h1>
+        <p className="mt-4 text-pretty text-base text-muted-foreground md:text-lg">
+          Search the library&apos;s previous-year papers by subject or course code, then narrow down
+          by year, programme, term, semester and branch.
+        </p>
+      </div>
     </header>
   );
 }
 
 export function SiteFooter() {
   return (
-    <footer className="mt-16 border-t pt-6 text-center text-xs text-muted-foreground">
+    <footer className="mt-16 border-t pt-6 text-center text-xs leading-relaxed text-muted-foreground">
       <p>
-        Papers are linked directly from the{' '}
+        Papers open directly from the{' '}
         <a
           href="https://libportal.manipal.edu/MIT/"
           target="_blank"

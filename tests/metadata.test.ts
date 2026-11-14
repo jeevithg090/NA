@@ -24,6 +24,13 @@ describe('normalizeBranch', () => {
     ['Biomedical Engineering', 'Biomedical'],
     ['physics', 'Physics'],
     ['data-science lab', 'Data Science Lab'],
+    ['Cce', 'CCE'],
+    ['it', 'IT'],
+    ['VLSI', 'VLSI'],
+    ['E & C', 'ECE'],
+    ['E and E', 'EEE'],
+    ['EC', 'ECE'],
+    ['Maths', 'Maths'],
   ])('normalises %j to %j', (input, expected) => {
     expect(normalizeBranch(input)).toBe(expected);
   });

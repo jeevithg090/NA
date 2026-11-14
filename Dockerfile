@@ -1,34 +1,36 @@
-# 1. Base image for building
-FROM node:20-alpine AS builder
+# syntax=docker/dockerfile:1
 
+# ---- Dependencies -----------------------------------------------------------
+FROM node:20-alpine AS deps
 WORKDIR /app
+COPY package.json package-lock.json ./
+RUN npm ci
 
-# Install dependencies
-COPY package.json package-lock.json* ./
-RUN npm install
-
-# Copy source code
+# ---- Build ------------------------------------------------------------------
+FROM node:20-alpine AS builder
+WORKDIR /app
+ENV NEXT_TELEMETRY_DISABLED=1
+COPY --from=deps /app/node_modules ./node_modules
 COPY . .
-
-# Build the app
 RUN npm run build
 
-# 2. Production image
+# ---- Runtime ----------------------------------------------------------------
 FROM node:20-alpine AS runner
-
 WORKDIR /app
+ENV NODE_ENV=production \
+    NEXT_TELEMETRY_DISABLED=1 \
+    PORT=3000 \
+    HOSTNAME=0.0.0.0
 
-# Install only production deps (optional for faster image)
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/package.json ./package.json
+RUN addgroup -S nodejs && adduser -S nextjs -G nodejs
 
-# Copy compiled output and public files
-COPY --from=builder /app/.next ./.next
-COPY --from=builder /app/public ./public
-COPY --from=builder /app/data ./data
-COPY --from=builder /app/next.config.ts ./next.config.ts
-COPY --from=builder /app/next.config.js ./next.config.js
+# `output: 'standalone'` bundles only the files the server needs.
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+COPY --from=builder --chown=nextjs:nodejs /app/public ./public
+# The dataset is read at runtime by the API routes.
+COPY --from=builder --chown=nextjs:nodejs /app/data ./data
 
-# Start Next.js
+USER nextjs
 EXPOSE 3000
-CMD ["npm", "start"]
+CMD ["node", "server.js"]

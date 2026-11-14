@@ -1,0 +1,39 @@
+[
+  {
+    "path": ["2010"],
+    "name": "",
+    "url": "https://libportal.manipal.edu/MIT/Membership/Student.pdf"
+  },
+  {
+    "path": ["2023", "Dec 2023"],
+    "name": "Library Policy.pdf",
+    "url": "https://libportal.manipal.edu/RootFolder/2023/Dec%202023/Library%20Policy.pdf"
+  },
+  {
+    "path": ["2023", "June 2023", "IV Sem", "Computer Science"],
+    "name": "Data Structures (CSE 2152).pdf",
+    "url": "https://libportal.manipal.edu/RootFolder/2023/June%202023/IV%20Sem/CSE/DS.pdf"
+  },
+  {
+    "path": ["2023", "June 2023", "IV Sem", "Mechanical"],
+    "name": "Thermodynamics End Sem.pdf",
+    "url": "https://libportal.manipal.edu/RootFolder/2023/June%202023/IV%20Sem/Mech/Thermo.pdf"
+  },
+  {
+    "path": ["2023", "Dec 2022 Jan 2023", "II Sem", "Computer Science"],
+    "name": "Engineering Mathematics II (MAT 1271).pdf",
+    "url": "https://libportal.manipal.edu/RootFolder/2023/Dec/II%20Sem/CSE/Maths.pdf"
+  },
+  {
+    "path": ["2022", "June 2022", "M.Tech", "Computer Science"],
+    "name": "Advanced Algorithms (CSE 5101).pdf",
+    "url": "https://libportal.manipal.edu/RootFolder/2022/June%202022/M.Tech/CSE/Algo.pdf"
+  },
+  {
+    "path": ["2022", "June 2022", "VI Sem", "Electronics & Communication"],
+    "name": "Digital Signal Processing (ECE 3201).pdf",
+    "url": "https://libportal.manipal.edu/RootFolder/2022/June%202022/VI%20Sem/ECE/DSP.pdf"
+  },
+  { "path": ["abcd", "June 2022"], "name": "Bad year.pdf", "url": "https://example.org/bad.pdf" },
+  { "path": ["2022", "June 2022"], "name": "Unsafe.pdf", "url": "javascript:alert(1)" }
+]

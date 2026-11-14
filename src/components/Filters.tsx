@@ -1,102 +1,68 @@
+'use client';
 
-"use client";
-
-import type { Dispatch, SetStateAction } from 'react';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Loader2 } from 'lucide-react';
+} from '@/components/ui/select';
+import {
+  ALL,
+  FILTER_LABELS,
+  FILTER_LEVELS,
+  type ActiveFilters,
+  type FilterLevel,
+  type FilterOptions,
+} from '@/lib/papers/filters';
 
-interface AvailableFilters {
-  years: string[];
-  programmes: string[];
-  terms: string[];
-  semesters: string[];
-  branches: string[];
-}
-type ActiveFilterKeys = keyof AvailableFilters;
-
-
-interface FiltersProps extends AvailableFilters {
-  activeFilters: Record<ActiveFilterKeys, string>;
-  onFilterChange: (filterName: ActiveFilterKeys, value: string) => void;
-  isLoadingOptions: boolean; 
+interface FiltersProps {
+  options: FilterOptions;
+  activeFilters: ActiveFilters;
+  onFilterChange: (level: FilterLevel, value: string) => void;
+  isLoading: boolean;
 }
 
-export function Filters({
-  years,
-  programmes,
-  terms,
-  semesters,
-  branches,
-  activeFilters,
-  onFilterChange,
-  isLoadingOptions,
-}: FiltersProps) {
-
-  const filterConfigs: { level: ActiveFilterKeys, placeholderLabel: string, options: string[] }[] = [
-    { level: 'years', placeholderLabel: 'Year', options: years },
-    { level: 'programmes', placeholderLabel: 'Programme', options: programmes },
-    { level: 'terms', placeholderLabel: 'Term', options: terms },
-    { level: 'semesters', placeholderLabel: 'Semester', options: semesters },
-    { level: 'branches', placeholderLabel: 'Branch', options: branches },
-  ];
-
-  const renderSelect = (
-    level: ActiveFilterKeys,
-    options: string[],
-    placeholderLabel: string,
-  ) => {
-    const currentValue = activeFilters[level];
-    const isDisabled = isLoadingOptions; 
-
-    let triggerPlaceholderText: string;
-    if (placeholderLabel === 'Year') {
-      triggerPlaceholderText = 'All Years';
-    } else if (placeholderLabel === 'Branch') {
-      triggerPlaceholderText = 'All Branches';
-    } else {
-      triggerPlaceholderText = `All ${placeholderLabel}s`;
-    }
-
-
-    return (
-      <div className="relative" key={level}>
-         <Select 
-            value={currentValue} 
-            onValueChange={(value) => onFilterChange(level, value)} 
-            disabled={isDisabled}
-          >
-           <SelectTrigger
-              aria-label={`${placeholderLabel} Filter`}
-              className="w-full transition-colors duration-150 ease-in-out hover:border-primary/50 focus:ring-primary bg-background rounded-md shadow-none text-sm py-1.5 h-9 disabled:opacity-50 disabled:cursor-not-allowed"
-           >
-             <SelectValue placeholder={triggerPlaceholderText} />
-           </SelectTrigger>
-           <SelectContent>
-             <SelectItem value="all">{triggerPlaceholderText}</SelectItem>
-             {options.map((option) => (
-               <SelectItem key={option} value={option}>
-                 {option}
-               </SelectItem>
-             ))}
-             {!isLoadingOptions && options.length === 0 && <SelectItem value="no-options" disabled>No options available</SelectItem>}
-           </SelectContent>
-         </Select>
-          {isLoadingOptions && ( 
-             <Loader2 className="absolute right-8 top-1/2 -translate-y-1/2 h-4 w-4 animate-spin text-muted-foreground" />
-          )}
-      </div>
-    );
-  };
-
+export function Filters({ options, activeFilters, onFilterChange, isLoading }: FiltersProps) {
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 items-end">
-      {filterConfigs.map(config => renderSelect(config.level, config.options, config.placeholderLabel))}
+    <div
+      role="group"
+      aria-label="Filter papers"
+      aria-busy={isLoading}
+      className="grid grid-cols-2 items-end gap-3 sm:grid-cols-3 md:grid-cols-5"
+    >
+      {FILTER_LEVELS.map((level) => {
+        const { label, all } = FILTER_LABELS[level];
+        const levelOptions = options[level];
+        const value = activeFilters[level];
+        // Keep the current selection visible even if it has dropped out of the option list.
+        const values =
+          value !== ALL && !levelOptions.includes(value) ? [value, ...levelOptions] : levelOptions;
+
+        return (
+          <Select key={level} value={value} onValueChange={(next) => onFilterChange(level, next)}>
+            <SelectTrigger
+              aria-label={`${label} filter`}
+              className="h-9 w-full bg-background text-sm"
+            >
+              <SelectValue placeholder={all} />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value={ALL}>{all}</SelectItem>
+              {values.map((option) => (
+                <SelectItem key={option} value={option}>
+                  {option}
+                </SelectItem>
+              ))}
+              {values.length === 0 && (
+                <SelectItem value="__none" disabled>
+                  {isLoading ? 'Loading…' : 'No options available'}
+                </SelectItem>
+              )}
+            </SelectContent>
+          </Select>
+        );
+      })}
     </div>
   );
 }
